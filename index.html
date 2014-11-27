@@ -2,27 +2,41 @@
 <html>
   <head>
     <title>Socket.IO TEST</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
     <!-- socket.io自動提供 -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
   </head>
-    
+    <style type="text/css">
+body,input{ font-size: 20pt;  font-family: "微軟正黑體" ;}
+button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑體" ;}
+#messages { list-style-type: none; margin: 0; padding: 0; float: right; width: 60vw; }
+#messages li { padding: 5px 10px; }
+#messages li:nth-child(odd) { background: #eee; }
+#Q {
+  width: 20vw;
+}
+#NumQ { list-style-type: none; margin: 0; padding: 0; float: right; width: 60vw;}
+#NumQ li { padding: 5px 10px; }
+#NumQ li:nth-child(odd) { background: #eee; }
+
+</style>
   <body>  
 <!-- text -->    
     <form>
-      <input id="m" autocomplete="off"><button>傳送</button>
+      <input id="m" autocomplete="off"><br>
+      <button>送出</button>
     </form>
     <ul id="messages"></ul>
 
-    <script>
+
+    <script>//text
       var socket = io();
+      $('#m').val('0');
+        //給input #m一個新的input值      
        $('form').submit(function(){
         socket.emit('chat message', $('#m').val());
         //io.socket.emit(傳送給伺服器(事件名稱,帶值));
 
-        $('#m').val('');
-        //給input #m一個新的input值
         return false;
       });
     
@@ -33,16 +47,14 @@
         //呈現在ul #messages的<li>中
       });
     </script>
-
-
-<!-- range -->
+<!-- range -->    
     <form id="formQ">
-      <input id="Q" type="range">
+      <input id="Q" type="range"><br>
       <button>送出</button>
     </form>
     <ul id="NumQ"></ul>
 
-    <script type="text/javascript">
+    <script type="text/javascript">//range
       var socket = io();
       $('#formQ').submit(function(){
           socket.emit('ValueQ', $('#Q').val());
@@ -52,7 +64,12 @@
       socket.on('ValueQ', function(valQ){
         $('#NumQ').append($('<li>').text(valQ));
       });
-
+    </script>
+<!-- 及時RANGE -->
+  <form oninput="x.value=parseInt(a.value)">
+    <input type="range" id="a" value="50">
+    <output name="x" for="a"></output>
+  </form>
 
     </script>
   </body>

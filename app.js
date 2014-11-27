@@ -30,6 +30,11 @@ io.on('connection', function(socket){
     io.emit('ValueQ', valQ);
   });
 
+  socket.on('VolumeQQQQQ', function(vol){
+    console.log('Volume:' + vol);
+    io.emit('ValueQQQQQ', vol);
+  });
+
 });
 
 app.set('port', process.env.PORT || 3000);
