@@ -1,35 +1,56 @@
 <!doctype html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
-    <style>
-      body,input{ font-size: 20pt;}
-      button{height: 40px; width: 120px; font-size: 20pt; background-color: rgba(14,164,220,.6);}
-      #messages { list-style-type: none; margin: 0; padding: 0; font-family: helvetica;}
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
-    </style>
+    <title>Socket.IO TEST</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
     <!-- socket.io自動提供 -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
   </head>
     
   <body>  
-    
-    <form action="">
+<!-- text -->    
+    <form>
       <input id="m" autocomplete="off"><button>傳送</button>
     </form>
     <ul id="messages"></ul>
+
     <script>
       var socket = io();
        $('form').submit(function(){
         socket.emit('chat message', $('#m').val());
+        //io.socket.emit(傳送給伺服器(事件名稱,帶值));
+
         $('#m').val('');
+        //給input #m一個新的input值
         return false;
       });
     
       socket.on('chat message', function(msg){
+      //接收伺服器所傳送的'事件名稱'所帶的值 
+
         $('#messages').append($('<li>').text(msg));
+        //呈現在ul #messages的<li>中
+      });
+    </script>
+
+
+<!-- range -->
+    <form id="formQ">
+      <input id="Q" type="range">
+      <button>送出</button>
+    </form>
+    <ul id="NumQ"></ul>
+
+    <script type="text/javascript">
+      var socket = io();
+      $('#formQ').submit(function(){
+          socket.emit('ValueQ', $('#Q').val());
+          return false;
+      });
+
+      socket.on('ValueQ', function(valQ){
+        $('#NumQ').append($('<li>').text(valQ));
       });
 
 

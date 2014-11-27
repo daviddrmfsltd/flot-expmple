@@ -17,9 +17,17 @@ io.on('connection', function(socket){
   });
     
   socket.on('chat message', function(msg){
+  //接收由index.html用socket.io方法發出的'事件'與'帶值'
     console.log('message: ' + msg);
+    //'帶值'顯示於終端
 
     io.emit('chat message', msg);
+    //'帶值'發布到前端
+  });
+
+  socket.on('ValueQ', function(valQ){
+    console.log('Cohice Number:' + valQ);
+    io.emit('ValueQ', valQ);
   });
 
 });

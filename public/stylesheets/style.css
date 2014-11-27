@@ -1,8 +1,5 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
-a {
-  color: #00B7FF;
-}
+body,input{ font-size: 20pt;}
+button{height: 40px; width: 120px; font-size: 20pt; background-color: rgba(14,164,220,.6);}
+#messages { list-style-type: none; margin: 0; padding: 0; font-family: helvetica;}
+#messages li { padding: 5px 10px; }
+#messages li:nth-child(odd) { background: #eee; }
