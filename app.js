@@ -25,9 +25,9 @@ io.on('connection', function(socket){
     //'帶值'發布到前端
   });
 
-  socket.on('ValueQ', function(valQ){
+  socket.on('ChangeValue', function(valQ){
     console.log('Cohice Number:' + valQ);
-    io.emit('ValueQ', valQ);
+    io.emit('ChangeValue',valQ);
   });
 
   socket.on('VolumeQQQQQ', function(vol){

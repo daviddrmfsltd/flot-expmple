@@ -52,29 +52,23 @@ button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑�
 <!-- range --> 
   <h1>TEST2</h1>      
     <form id="formQ">
-      <input id="Q" type="range"><br>
-      <button>送出</button>
+      <input id="Q" type="range">
+      <div id="NumQQ">50</div>
     </form>
-    <ul id="NumQ"></ul>
+
 
     <script type="text/javascript">//range
       var socket = io();
-      $('#formQ').submit(function(){
-          socket.emit('ValueQ', $('#Q').val());
+      $('#formQ').change(function(){
+          socket.emit('ChangeValue', $('#Q').val());
           return false;
       });
-
-      socket.on('ValueQ', function(valQ){
-        $('#NumQ').append($('<li>').text(valQ));
+      socket.on('ChangeValue', function(valQ){
+        $('#NumQQ').text(valQ);
       });
-    </script>
-<!-- 及時RANGE -->
-  <h1>TEST3</h1>   
-  <form oninput="x.value=parseInt(a.value)">
-    <input type="range" id="a" value="50">
-    <output name="x" for="a">50</output>
-  </form>
 
+      
     </script>
+
   </body>
 </html>
