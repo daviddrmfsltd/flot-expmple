@@ -18,6 +18,9 @@ button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑�
 #NumQ { list-style-type: none; margin: 0; padding: 0; float: right; width: 60vw;}
 #NumQ li { padding: 5px 10px; }
 #NumQ li:nth-child(odd) { background: #eee; }
+#inputQ {
+  width: 20vw;
+}
 
 </style>
   <body>  
@@ -61,14 +64,33 @@ button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑�
       var socket = io();
       $('#formQ').change(function(){
           socket.emit('ChangeValue', $('#Q').val());
+          console.log("The new value: " + event.target.value);
           return false;
       });
       socket.on('ChangeValue', function(valQ){
         $('#NumQQ').text(valQ);
       });
 
-      
+
     </script>
 
+    
+<head>
+    <script type="text/javascript">
+    // Firefox, Google Chrome, Opera, Safari, Internet Explorer from version 9
+        function OnInput (event) {            
+            var socket = io();        
+            socket.emit('ChangeValue', $('#inputQ').val());
+              console.log("The new value: " + event.target.value);
+              return false;
+        }
+
+    </script>
+</head>
+<body>
+
+    <input id="inputQ" type="range" oninput="OnInput(event)" value="50">
+
+</body>
   </body>
 </html>

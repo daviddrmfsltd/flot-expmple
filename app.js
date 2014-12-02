@@ -26,14 +26,13 @@ io.on('connection', function(socket){
   });
 
   socket.on('ChangeValue', function(valQ){
-    console.log('Cohice Number:' + valQ);
+    console.log('Change Number:' + valQ);
     io.emit('ChangeValue',valQ);
   });
 
-  socket.on('VolumeQQQQQ', function(vol){
-    console.log('Volume:' + vol);
-    io.emit('ValueQQQQQ', vol);
-  });
+
+
+
 
 });
 
