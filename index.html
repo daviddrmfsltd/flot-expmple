@@ -59,6 +59,7 @@ button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑�
       <div id="NumQQ">50</div>
     </form>
 
+    <input id="inputQ" type="range" oninput="OnInput(event)" value="50">
 
     <script type="text/javascript">//range
       var socket = io();
@@ -70,14 +71,7 @@ button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑�
       socket.on('ChangeValue', function(valQ){
         $('#NumQQ').text(valQ);
       });
-
-
-    </script>
-
-    
-<head>
-    <script type="text/javascript">
-    // Firefox, Google Chrome, Opera, Safari, Internet Explorer from version 9
+        
         function OnInput (event) {            
             var socket = io();        
             socket.emit('ChangeValue', $('#inputQ').val());
@@ -86,10 +80,8 @@ button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑�
         }
 
     </script>
-</head>
-<body>
 
-    <input id="inputQ" type="range" oninput="OnInput(event)" value="50">
+
 
 </body>
   </body>
