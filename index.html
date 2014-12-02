@@ -58,16 +58,16 @@ button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑�
       <input id="Q" type="range">
       <div id="NumQQ">50</div>
     </form>
-
     <input id="inputQ" type="range" oninput="OnInput(event)" value="50">
-
+      <!-- input的oninput方法主要是監聽value的改變(firefox,chrome)，onpropertychange是監聽任何狀態改變(IE) 範例:http://www.17jquery.com/javascript/26449/-->
     <script type="text/javascript">//range
       var socket = io();
       $('#formQ').change(function(){
           socket.emit('ChangeValue', $('#Q').val());
-          console.log("The new value: " + event.target.value);
+          // console.log("The new value: " + event.target.value);
           return false;
       });
+      //統一接收ChangeValue事件所收到的value值
       socket.on('ChangeValue', function(valQ){
         $('#NumQQ').text(valQ);
       });
@@ -75,11 +75,15 @@ button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑�
         function OnInput (event) {            
             var socket = io();        
             socket.emit('ChangeValue', $('#inputQ').val());
-              console.log("The new value: " + event.target.value);
+              // console.log("The new value: " + event.target.value);
               return false;
         }
 
+
     </script>
+
+
+
 
 
 
