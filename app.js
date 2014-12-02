@@ -30,10 +30,6 @@ io.on('connection', function(socket){
     io.emit('ChangeValue',valQ);
   });
 
-
-
-
-
 });
 
 app.set('port', process.env.PORT || 3000);

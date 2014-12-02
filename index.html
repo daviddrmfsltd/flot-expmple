@@ -35,10 +35,11 @@ button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑�
 
     <script>//text
       var socket = io();
-      $('#m').val('0');
+      $('#m').val('');
         //給input #m一個新的input值      
        $('form').submit(function(){
         socket.emit('chat message', $('#m').val());
+        $('#m').val('');
         //io.socket.emit(傳送給伺服器(事件名稱,帶值));
 
         return false;
@@ -51,6 +52,8 @@ button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑�
         //呈現在ul #messages的<li>中
       });
     </script>
+
+
 
 <!-- range --> 
   <h1>TEST2</h1>      
@@ -70,6 +73,7 @@ button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑�
       //統一接收ChangeValue事件所收到的value值
       socket.on('ChangeValue', function(valQ){
         $('#NumQQ').text(valQ);
+        $('#pieQ').text(valQ);
       });
         
         function OnInput (event) {            
@@ -83,10 +87,5 @@ button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑�
     </script>
 
 
-
-
-
-
-</body>
   </body>
 </html>
