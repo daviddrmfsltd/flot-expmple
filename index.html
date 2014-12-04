@@ -21,6 +21,10 @@ button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑�
 #inputQ {
   width: 20vw;
 }
+#box {
+  width: 20vw;
+  height: 10vh;
+}
 
 </style>
   <body>  
@@ -85,6 +89,110 @@ button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑�
 
 
     </script>
+
+
+<h1>Input存至Json</h1> 
+ 
+<table> 
+    <tr><td>動作指令:</td><td><input type="text" id="action" autocomplete="on"></td></tr> 
+    <tr><td></td><td><input type="button" value="存成JSON" onclick="saveStorage();"></td></tr> 
+</table> 
+
+
+<input type="text" id="find"> 
+<input type="button" value="撈出JSON資料" onclick="findStorage('msgg');"> 
+
+<div id="box"></div>
+<!-- 下面这块用于显示被检索到的信息文本 --> 
+<p id ="msgg"></p> 
+
+<script type="text/javascript">
+  /** 
+ *  This file is confidential by Charles.Wang 
+ *  Copyright belongs to Charles.wang 
+ *  You can make contact with Charles.Wang (charles_wang888@126.com) 
+ */ 
+  
+ //存一组关联数据到json对象，再把json对象存放到localStorage中 
+ function saveStorage(){ 
+     //创建一个js对象，用于存放当前从表单获得的数据 
+    var data = new Object; 
+    //吧这对象的属性名依次和从用户输入的属性值关联起来 
+    data.action=document.getElementById("action").value; 
+    //创建一个json对象，让其对应刚才创建的对象的字符串数据形式 
+    var str = JSON.stringify(data); 
+    //JSON.stringify(value [, replacer] [, space])
+    //吧json对象存放到localStorage上，key为用户输入的用户名，value为这个json字符串 
+    localStorage.setItem(data.action,str); 
+    //window.localStorage.setItem("MyKeyName", "MyDataValue");
+    //有關HTML5 Web Storage  
+    //http://huan-lin.blogspot.com/2012/06/html5-web-storage.html
+    console.log("儲存成功! "+data.action); 
+ } 
+  
+  //从localStorage按照用户输入的检索名称为key，得到对应的json字符串，然后把json字符串解析为一组信息， 并且打印到指定位置 
+  function findStorage(id){ 
+    //获得用户的输入，是用户希望检索的名字 
+    var requiredPersonName = document.getElementById("find").value; 
+    //以这个检索的名字为key,来查找localStorage,得到了json字符串 
+    var str=localStorage.getItem(requiredPersonName); 
+    //解析这个json字符串得到Object对象 
+    var data= JSON.parse(str); 
+    //从Object对象中分离出相关属性值，然后构造要输出的HTML内容 
+    var result="指令:"+data.action+'<br>'; 
+    //取得页面上要输出的容器 
+    document.getElementById("msgg").innerHTML = result;
+    var socket = io();
+    socket.emit('chat message', data.action);
+    socket.on('chat message', function(msg){
+      //接收伺服器所傳送的'事件名稱'所帶的值
+      $('#msgg').append($('<li>').text(msg)); 
+      if (msg == "red"){ 
+        $("#box").css("background-color","red");
+      } else if (msg == "green"){
+        $("#box").css("background-color","green");
+      } else if (msg == "yellow"){
+        $("#box").css("background-color","yellow");
+      }
+    });
+  } 
+</script>
+
+
+<!-- 解析URL -->
+<h1>解析JSON格式URL</h1>
+<div id="id01"></div>
+
+<script>
+var xmlhttp = new XMLHttpRequest();
+var url = "http://www.w3schools.com/website/Customers_MYSQL.php";
+
+xmlhttp.onreadystatechange=function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        myFunction(xmlhttp.responseText);
+    }
+}
+xmlhttp.open("GET", url, true);
+xmlhttp.send();
+
+function myFunction(response) {
+    var arr = JSON.parse(response);
+    var i;
+    var out = "<table>";
+
+    for(i = 0; i < arr.length; i++) {
+        out += "<tr><td>" +
+        arr[i].Name +
+        "</td><td>" +
+        arr[i].City +
+        "</td><td>" +
+        arr[i].Country +
+        "</td></tr>";
+    }
+    out += "</table>"
+    document.getElementById("id01").innerHTML = out;
+}
+</script>
 
 
   </body>
