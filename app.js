@@ -8,6 +8,10 @@ var path = require('path');
 app.get('/', function(req, res){
   res.sendFile(path.join(__dirname, 'index.html'));
 });
+app.get('/flot', function(req, res){
+  res.sendFile(path.join(__dirname, 'flot.html'));
+});
+
 
 io.on('connection', function(socket){
   console.log('a user connected');
@@ -25,9 +29,9 @@ io.on('connection', function(socket){
     //'帶值'發布到前端
   });
 
-  socket.on('ChangeValue', function(valQ){
+  socket.on('ChangeValue', function(valX){
     // console.log('Change Number:' + valQ);
-    io.emit('ChangeValue',valQ);
+    io.emit('ChangeValue',valX);
   });
 
 });

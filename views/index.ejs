@@ -1,11 +1,199 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <title>Socket.IO TEST</title>
+    <!-- socket.io自動提供 -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
   </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <style type="text/css">
+body,input{ font-size: 20pt;  font-family: "微軟正黑體" ;}
+button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑體" ;}
+#messages { list-style-type: none; margin: 0; padding: 0; float: right; width: 60vw; }
+#messages li { padding: 5px 10px; }
+#messages li:nth-child(odd) { background: #eee; }
+#Q {
+  width: 20vw;
+}
+#NumQ { list-style-type: none; margin: 0; padding: 0; float: right; width: 60vw;}
+#NumQ li { padding: 5px 10px; }
+#NumQ li:nth-child(odd) { background: #eee; }
+#inputQ {
+  width: 20vw;
+}
+#box {
+  width: 20vw;
+  height: 10vh;
+}
+
+</style>
+  <body>  
+<!-- text --> 
+  <h1>TEST1</h1>   
+    <form>
+      <input id="m" autocomplete="off"><br>
+      <button>送出</button>
+    </form>
+    <ul id="messages"></ul>
+
+
+    <script>//text
+      var socket = io();
+      $('#m').val('');
+        //給input #m一個新的input值      
+       $('form').submit(function(){
+        socket.emit('chat message', $('#m').val());
+        $('#m').val('');
+        //io.socket.emit(傳送給伺服器(事件名稱,帶值));
+
+        return false;
+      });
+    
+      socket.on('chat message', function(msg){
+      //接收伺服器所傳送的'事件名稱'所帶的值 
+
+        $('#messages').append($('<li>').text(msg));
+        //呈現在ul #messages的<li>中
+      });
+    </script>
+
+
+
+<!-- range --> 
+  <h1>TEST2</h1>      
+    <form id="formQ">
+      <input id="Q" type="range">
+      <div id="NumQQ">50</div>
+    </form>
+    <input id="inputQ" type="range" oninput="OnInput(event)" value="50">
+      <!-- input的oninput方法主要是監聽value的改變(firefox,chrome)，onpropertychange是監聽任何狀態改變(IE) 範例:http://www.17jquery.com/javascript/26449/-->
+    <script type="text/javascript">//range
+      var socket = io();
+      $('#formQ').change(function(){
+          socket.emit('ChangeValue', $('#Q').val());
+          // console.log("The new value: " + event.target.value);
+          return false;
+      });
+      //統一接收ChangeValue事件所收到的value值
+      socket.on('ChangeValue', function(valQ){
+        $('#NumQQ').text(valQ);
+        $('#pieQ').text(valQ);
+      });
+        
+        function OnInput (event) {            
+            var socket = io();        
+            socket.emit('ChangeValue', $('#inputQ').val());
+              // console.log("The new value: " + event.target.value);
+              return false;
+        }
+
+
+    </script>
+
+
+<h1>Input存至Json</h1> 
+ 
+<table> 
+    <tr><td>動作指令:</td><td><input type="text" id="action" autocomplete="on"></td></tr> 
+    <tr><td></td><td><input type="button" value="存成JSON" onclick="saveStorage();"></td></tr> 
+</table> 
+
+
+<input type="text" id="find"> 
+<input type="button" value="撈出JSON資料" onclick="findStorage('msgg');"> 
+
+<div id="box"></div>
+<!-- 下面这块用于显示被检索到的信息文本 --> 
+<p id ="msgg"></p> 
+
+<script type="text/javascript">
+  /** 
+ *  This file is confidential by Charles.Wang 
+ *  Copyright belongs to Charles.wang 
+ *  You can make contact with Charles.Wang (charles_wang888@126.com) 
+ */ 
+  
+ //存一组关联数据到json对象，再把json对象存放到localStorage中 
+ function saveStorage(){ 
+     //创建一个js对象，用于存放当前从表单获得的数据 
+    var data = new Object; 
+    //吧这对象的属性名依次和从用户输入的属性值关联起来 
+    data.action=document.getElementById("action").value; 
+    //创建一个json对象，让其对应刚才创建的对象的字符串数据形式 
+    var str = JSON.stringify(data); 
+    //JSON.stringify(value [, replacer] [, space])
+    //吧json对象存放到localStorage上，key为用户输入的用户名，value为这个json字符串 
+    localStorage.setItem(data.action,str); 
+    //window.localStorage.setItem("MyKeyName", "MyDataValue");
+    //有關HTML5 Web Storage  
+    //http://huan-lin.blogspot.com/2012/06/html5-web-storage.html
+    console.log("儲存成功! "+data.action); 
+ } 
+  
+  //从localStorage按照用户输入的检索名称为key，得到对应的json字符串，然后把json字符串解析为一组信息， 并且打印到指定位置 
+  function findStorage(id){ 
+    //获得用户的输入，是用户希望检索的名字 
+    var requiredAction = document.getElementById("find").value; 
+    //以这个检索的名字为key,来查找localStorage,得到了json字符串 
+    var str=localStorage.getItem(requiredAction); 
+    //解析这个json字符串得到Object对象 
+    var data= JSON.parse(str); 
+    //从Object对象中分离出相关属性值，然后构造要输出的HTML内容 
+    var result="指令:"+data.action+'<br>'; 
+    //取得页面上要输出的容器 
+    document.getElementById("msgg").innerHTML = result;
+    var socket = io();
+    socket.emit('chat message', data.action);
+    socket.on('chat message', function(msg){
+      //接收伺服器所傳送的'事件名稱'所帶的值
+      $('#msgg').append($('<li>').text(msg)); 
+      if (msg == "red"){ 
+        $("#box").css("background-color","red");
+      } else if (msg == "green"){
+        $("#box").css("background-color","green");
+      } else if (msg == "yellow"){
+        $("#box").css("background-color","yellow");
+      }
+    });
+  } 
+</script>
+
+
+<!-- 解析URL -->
+<h1>解析JSON格式URL</h1>
+<div id="id01"></div>
+
+<script>
+var xmlhttp = new XMLHttpRequest();
+var url = "http://www.w3schools.com/website/Customers_MYSQL.php";
+
+xmlhttp.onreadystatechange=function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        myFunction(xmlhttp.responseText);
+    }
+}
+xmlhttp.open("GET", url, true);
+xmlhttp.send();
+
+function myFunction(response) {
+    var arr = JSON.parse(response);
+    var i;
+    var out = "<table>";
+
+    for(i = 0; i < arr.length; i++) {
+        out += "<tr><td>" +
+        arr[i].Name +
+        "</td><td>" +
+        arr[i].City +
+        "</td><td>" +
+        arr[i].Country +
+        "</td></tr>";
+    }
+    out += "</table>"
+    document.getElementById("id01").innerHTML = out;
+}
+</script>
+
+
   </body>
 </html>

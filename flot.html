@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">   
+<head>
+     <style type="text/css">
+        #flot-placeholder{height:80vh; width: 80vw;}   
+        #inputQ{width: 50%;}  
+        #NumQQ{font-size: 30pt; position: absolute; left: 73vw;}  
+    </style>
+    <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
+    <script type="text/javascript" src="http://www.pureexample.com/js/lib/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
+    <script src="https://gflot.googlecode.com/svn-history/r154/trunk/flot/jquery.flot.axislabels.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+
+
+<!-- 概念流程:
+將數值存成Flot吃的JSON格式 [x,y] -->
+
+
+
+<input id="inputQ" type="range" oninput="OnInput(event)" value="50">
+<div id="NumQQ">50</div>
+  <!-- input的oninput方法主要是監聽value的改變(firefox,chrome)，onpropertychange是監聽任何狀態改變(IE) 範例:http://www.17jquery.com/javascript/26449/-->
+<script type="text/javascript">//range
+  var socket = io();
+  //統一接收ChangeValue事件所收到的value值
+  socket.on('ChangeValue', function(valQ){
+    $('#NumQQ').text(valQ);
+  });
+    
+function OnInput (event) {            
+    var socket = io();        
+    socket.emit('ChangeValue', $('#inputQ').val());
+      console.log("The new value: " + event.target.value);
+      return false;
+}
+
+//假裝製造JSON格式
+var data = [];
+var dataset;
+var totalPoints = 200;
+var updateInterval = 100;
+var now = new Date().getTime();
+
+
+function GetData() {
+    data.shift();
+
+    while (data.length < totalPoints) {     
+        var y = $('#inputQ').val();
+        var temp = [now += updateInterval, y];
+        data.push(temp);
+    }
+}
+
+var options = {
+    series: {
+        lines: {
+            show: true,
+            lineWidth: 1.2,
+            fill: true
+        }
+    },
+    xaxis: {
+        mode: "time",
+        tickSize: [2, "second"],
+        tickFormatter: function (v, axis) {
+            var date = new Date(v);
+
+            if (date.getSeconds() % 20 == 0) {
+                var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return hours + ":" + minutes + ":" + seconds;
+            } else {
+                return "";
+            }
+        },
+        axisLabel: "Time",
+        axisLabelUseCanvas: true,
+        axisLabelFontSizePixels: 12,
+        axisLabelFontFamily: 'Verdana, Arial',
+        axisLabelPadding: 10
+    },
+    yaxis: {
+        min: 0,
+        max: 100,        
+        tickSize: 5,
+        tickFormatter: function (v, axis) {
+            if (v % 10 == 0) {
+                return v + "%";
+            } else {
+                return "";
+            }
+        },
+        axisLabel: "CPU loading",
+        axisLabelUseCanvas: true,
+        axisLabelFontSizePixels: 12,
+        axisLabelFontFamily: 'Verdana, Arial',
+        axisLabelPadding: 6
+    },
+    // legend: {        
+    //     labelBoxBorderColor: "#fff"
+    // }
+    // ,
+    // grid: {                
+    //     backgroundColor: "#000000",
+    //     tickColor: "#008040"
+    // }
+};
+
+$(document).ready(function () {
+    GetData();
+
+    dataset = [
+        { label: "X方向", data: data, color: "#00FF00" }
+    ];
+
+    $.plot($("#flot-placeholder1"), dataset, options);
+
+    function update() {
+        GetData();
+
+        $.plot($("#flot-placeholder1"), dataset, options)
+        setTimeout(update, updateInterval);
+    }
+
+    update();
+});
+
+
+
+</script>
+<!-- HTML -->
+<div id="flot-placeholder1" style="width:80vw;height:80vh"></div>
+</body>
+</html>

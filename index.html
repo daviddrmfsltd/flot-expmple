@@ -1,9 +1,10 @@
-<!doctype html>
+
 <html>
   <head>
     <title>Socket.IO TEST</title>
     <!-- socket.io自動提供 -->
     <script src="/socket.io/socket.io.js"></script>
+
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
   </head>
     <style type="text/css">
@@ -77,7 +78,6 @@ button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑�
       //統一接收ChangeValue事件所收到的value值
       socket.on('ChangeValue', function(valQ){
         $('#NumQQ').text(valQ);
-        $('#pieQ').text(valQ);
       });
         
         function OnInput (event) {            
@@ -133,9 +133,9 @@ button{height: 40px; width: 120px; font-size: 20pt;  font-family: "微軟正黑�
   //从localStorage按照用户输入的检索名称为key，得到对应的json字符串，然后把json字符串解析为一组信息， 并且打印到指定位置 
   function findStorage(id){ 
     //获得用户的输入，是用户希望检索的名字 
-    var requiredPersonName = document.getElementById("find").value; 
+    var requiredAction = document.getElementById("find").value; 
     //以这个检索的名字为key,来查找localStorage,得到了json字符串 
-    var str=localStorage.getItem(requiredPersonName); 
+    var str=localStorage.getItem(requiredAction); 
     //解析这个json字符串得到Object对象 
     var data= JSON.parse(str); 
     //从Object对象中分离出相关属性值，然后构造要输出的HTML内容 
